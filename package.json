@@ -1,0 +1,16 @@
+{
+  "name": "echo-node-practice",
+  "version": "0.0.1",
+  "description": "A simple echo server for my personal exploration of node.js and several modules of interest.",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.x.x"
+    , "jade": "*"
+    , "connect": "*"
+    , "cookie": "*"
+    , "socket.io": "*"
+  }
+}

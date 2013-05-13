@@ -1,0 +1,12 @@
+extends layout
+
+block head
+  script(type='text/javascript', src='socket.io/socket.io.js')
+  script(type='text/javascript', src='scripts/echo.js')
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #display
+  div
+    input#input(type='text')
