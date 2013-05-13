@@ -12,5 +12,7 @@
     , "connect": "*"
     , "cookie": "*"
     , "socket.io": "*"
+    , "passport": "*"
+    , "passport-local": "*"
   }
 }

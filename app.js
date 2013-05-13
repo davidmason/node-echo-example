@@ -7,14 +7,37 @@ var SITE_SECRET = 'flibberdijibbet'
 
 var express = require('express')
   , routes = require('./routes')
+  , login = require('./routes/login')
   , echo = require('./routes/echo')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
   , socketio = require('socket.io')
   , connect = require('connect')
-  , cookie = require('cookie');
+  , cookie = require('cookie')
+  , passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy
   ;
+
+passport.use(new LocalStrategy(function(username, password, done) {
+    // TODO check against database instead
+    if (username != "monkey") {
+        done(null, false, { message: 'Incorrect username.' });
+    }
+    if (password != "ookook") {
+        done(null, false, { message: 'Incorrect password.' });
+    }
+    user = "Magic Monkey";
+    return done(null, user);
+}));
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(id, done) {
+    done(null, user);
+});
 
 var app = express();
 var sessionStore = new connect.session.MemoryStore();
@@ -32,11 +55,10 @@ app.use(express.session({
   , store: sessionStore
 }));
 app.use(express.methodOverride());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-
-// adding to try and get cookies working
-app.use(express.cookieParser())
 
 // development only
 if ('development' == app.get('env')) {
@@ -46,6 +68,13 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/echo', echo.echo);
 app.get('/users', user.list);
+
+app.get('/login', login.login);
+app.post('/login', passport.authenticate('local', { successRedirect: '/',
+                                                    failureRedirect: '/login',
+                                                    failureFlash: false })
+);
+
 
 var server = http.createServer(app);
 var io = socketio.listen(server);
@@ -97,6 +126,8 @@ io.set('authorization', function(data, errorAndAccept) {
             return errorAndAccept('Session not found', false);
         }
         
+        console.log('user: ' + session.passport.user);
+        
         data.session = session;
         data.foo = 'bar';
         console.log('Handshake data after cookie parsing');
@@ -111,6 +142,8 @@ io.sockets.on('connection', function(socket) {
     // illustrative, this could actually be used to check permissions
     // for an operation or something
     console.log('Handshake data foo: ' + socket.handshake.foo)
+
+    socket.emit('echo', { echo: 'Hi ' + socket.handshake.session.passport.user });
 
     socket.on('sometext', function(data) {
         console.log(data);
