@@ -1,9 +1,29 @@
 # Echo: node.js practice
 
+## License
+MIT (see LICENSE)
+
+## Use
+
+### Prerequisites
+node.js installed
+
+### Installation
+npm install
+
+### Deployment
+node app.js
+
+
+## Purpose
+
 This module exists purely for my own exploration of node.js functionality and modules. I'm using a
 moderately simple echo server as a basis around which to look at how to get a set of features
 working with express, socket.io, passport and whatever else I find (these look good for now, but I
 might swap them out for other modules at any time).
+
+
+## Goals
 
 I will likely work on this module until it can do the following:
 
@@ -17,7 +37,6 @@ I will likely work on this module until it can do the following:
     (i.e. when they have passed a threshold with number of messages echoed)
  - maybe work with redis (pending learning more about redis)
 
-For simplicity, this module is not bening shared for now. It has no license and may have copyright
-issues as I take bits and pieces from around the web to get things working.
+I haven't seen a complete working example of express + passport + socket.io, so I may clean
+this up when I'm done and present it as a working example of that combination.
 
-I haven't seen a complete working example of express + passport + socket.io
